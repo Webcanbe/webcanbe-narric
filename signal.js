@@ -108,12 +108,29 @@
     footer.innerHTML = '<p style="margin:0 0 8px">A <a href="https://webcanbe.com" target="_blank" rel="noopener noreferrer" style="color:inherit">WebCanBe</a> project</p><p style="margin:0">' + disclosure + '</p>';
     document.body.append(footer);
   }
+  function makeFormsHonest() {
+    document.querySelectorAll('form').forEach(form => {
+      if (form.dataset.signalDemoBound) return;
+      form.dataset.signalDemoBound = 'true';
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        let note = form.querySelector('.signal-form-note');
+        if (!note) {
+          note = document.createElement('p');
+          note.className = 'signal-form-note';
+          note.style.cssText = 'margin:10px 0 0;color:rgba(10,10,10,.58);font:500 12px/1.4 Inter,Arial,sans-serif';
+          form.append(note);
+        }
+        note.textContent = 'Portfolio demo — submissions are not sent.';
+      });
+    });
+  }
   function apply() {
     document.title = `${brand} — Independent Business & Technology Media`;
     setMeta('meta[name="description"]', description); setMeta('meta[property="og:title"]', `${brand} — Independent Business & Technology Media`);
     setMeta('meta[property="og:description"]', description); setMeta('meta[name="twitter:title"]', `${brand} — Independent Business & Technology Media`);
     setMeta('meta[name="twitter:description"]', description); document.querySelector('meta[name="generator"]')?.remove();
-    replaceNodes(); replaceHero(); cleanLinks(); replaceLogos(); replacePartnerImages(); addFooter();
+    replaceNodes(); replaceHero(); cleanLinks(); replaceLogos(); replacePartnerImages(); makeFormsHonest(); addFooter();
   }
   const afterHydration = () => { apply(); window.setTimeout(apply, 700); window.setTimeout(apply, 2200); };
   if (document.readyState === 'complete') window.setTimeout(afterHydration, 0); else window.addEventListener('load', afterHydration, { once: true });
